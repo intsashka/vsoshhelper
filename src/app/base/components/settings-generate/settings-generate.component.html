@@ -1,0 +1,39 @@
+<div class="d-flex flex-column align-items-center w-100 mt-2" [formGroup]="form">
+  <mat-form-field>
+    <mat-label>
+      Путь к шаблону
+    </mat-label>
+    <input matInput type="text" formControlName="pathToTemplate" />
+    <input type="file" accept="application/x-tex application/x-latex" class="d-none" #inputTemplateFile (input)="selectTemplate($event)" />
+    <button mat-icon-button matSuffix>
+      <mat-icon svgIcon="insert_drive_file" (click)="inputTemplateFile.click()"></mat-icon>
+    </button>
+    <mat-error *ngIf="pathToTemplateControl.errors">
+      Шаблон должен быть задан
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>
+      Путь к директории вывода
+    </mat-label>
+    <input matInput type="text" formControlName="pathToOutDir" />
+    <input type="file" class="d-none" #inputPathToDir (input)="selectDir($event)" webkitdirectory="" directory="" />
+    <button mat-icon-button matSuffix>
+      <mat-icon svgIcon="insert_drive_file" (click)="inputPathToDir.click()"></mat-icon>
+    </button>
+    <mat-error *ngIf="pathToOutDirControl.errors">
+      Директория вывода должна быть задана
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>
+      Имя файла
+    </mat-label>
+    <input matInput type="text" formControlName="filename" />
+    <mat-error *ngIf="filenameControl.errors">
+      Имя файла не должно быть пустым
+    </mat-error>
+  </mat-form-field>
+</div>

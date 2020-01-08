@@ -1,0 +1,41 @@
+<div class="main-container" [formGroup]="form">
+  <app-settings-generate [settings]="settingsGenerate$ | async" (changeSettings)="settingsGenerate = $event"></app-settings-generate>
+
+  <app-select-school-subject [schoolSubjects]="schoolSubjects$ | async" (selectSchoolSubject)="schoolSubject = $event"></app-select-school-subject>
+
+  <div *ngIf="schoolSubject">
+    <div>
+      <span>
+        Название предмета:
+      </span>
+      <span>
+        {{ schoolSubject.names.nominative }}
+      </span>
+    </div>
+    <div>
+      <span>
+        Дата:
+      </span>
+      <span>
+        {{ formattedDataEvent }}
+      </span>
+    </div>
+    <div>
+      <span>
+        Место проведения:
+      </span>
+      <span>
+        {{ schoolSubject.placeEvent }}
+      </span>
+    </div>
+  </div>
+
+  <mat-form-field *ngFor="let cipher of ciphers">
+    <mat-label> Количество шифровок для {{ cipher }} класса {{ schoolSubject.cipher[cipher] }} </mat-label>
+    <input matInput type="text" [formControlName]="cipher" />
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="generate()" [disabled]="!canGenerate()">
+    Сгенерировать
+  </button>
+</div>

@@ -1,0 +1,30 @@
+<div class="main-container" [formGroup]="form">
+  <app-settings-generate [settings]="settingsGenerate$ | async" (changeSettings)="settingsGenerate = $event"></app-settings-generate>
+
+  <app-select-school-subject [schoolSubjects]="schoolSubjects$ | async" (selectSchoolSubject)="schoolSubject = $event"></app-select-school-subject>
+
+  <mat-form-field>
+    <mat-label>
+      Количество заказанных талонов
+    </mat-label>
+    <input matInput type="text" formControlName="numberCouponsOrdered" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>
+      Количество запасных талонов
+    </mat-label>
+    <input matInput type="text" formControlName="numberReplacementCoupons" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>
+      Итоговое количество запасных талонов
+    </mat-label>
+    <input matInput type="text" formControlName="totalNumberReplacementCoupons" />
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="generate()" [disabled]="!canGenerate()">
+    Сгенерировать
+  </button>
+</div>

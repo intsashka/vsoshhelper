@@ -1,0 +1,11 @@
+<mat-form-field class="w-100">
+  <mat-label>
+    Предмет
+  </mat-label>
+  <mat-select [formControl]="selectedSchoolSubjectControl">
+    <mat-option *ngFor="let subject of schoolSubjects" [value]="subject">{{ subject.title }}</mat-option>
+  </mat-select>
+  <mat-error *ngIf="selectedSchoolSubjectControl.errors">
+    Предмет должен быть задан
+  </mat-error>
+</mat-form-field>

@@ -1,0 +1,82 @@
+<div class="main-container">
+  <app-settings-generate [settings]="settingsGenerate$ | async" (changeSettings)="settingsGenerate = $event"></app-settings-generate>
+
+  <app-select-school-subject [schoolSubjects]="schoolSubjects$ | async" (selectSchoolSubject)="schoolSubject = $event"></app-select-school-subject>
+
+  <mat-form-field>
+    <mat-label>
+      Путь к протоколу
+    </mat-label>
+    <input matInput type="text" [formControl]="pathToProtocolControl" />
+    <input type="file" class="d-none" #inputFile (input)="selectFile($event)" />
+    <button mat-icon-button matSuffix (click)="inputFile.click()">
+      <mat-icon svgIcon="insert_drive_file"></mat-icon>
+    </button>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="load()">
+    Загрузить
+  </button>
+
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+      <li>
+        <mat-checkbox [checked]="node.checked" [indeterminate]="node.indeterminate" (change)="checkboxChange($event, node)"></mat-checkbox>
+        <span class="ml-2">
+          {{ getTitle(node) }}
+        </span>
+      </li>
+    </mat-tree-node>
+    <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+      <li>
+        <div>
+          <mat-checkbox [checked]="node.checked" [indeterminate]="node.indeterminate" (change)="checkboxChange($event, node)"></mat-checkbox>
+          <button mat-icon-button matTreeNodeToggle>
+            <mat-icon [svgIcon]="treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'"> </mat-icon>
+          </button>
+          <span class="ml-2">
+            {{ getTitle(node) }}
+          </span>
+        </div>
+        <ul [class.d-none]="!treeControl.isExpanded(node)">
+          <ng-container matTreeNodeOutlet></ng-container>
+        </ul>
+      </li>
+    </mat-nested-tree-node>
+  </mat-tree>
+
+  <mat-form-field>
+    <mat-label>
+      Регистрационный номер
+    </mat-label>
+    <input matInput type="number" [formControl]="registrationNumberControl">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>
+      Номер диплома
+    </mat-label>
+    <input matInput type="number" [formControl]="numberDiplomaControl">
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="generate()">
+    Сгенерировать
+  </button>
+
+  <mat-form-field>
+    <mat-label>
+      Для ведомости
+    </mat-label>
+    <textarea matInput cdkTextareaAutosize [cdkAutosizeMinRows]="5" [cdkAutosizeMaxRows]="15" #forListPrizes>
+    </textarea>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>
+      Для анонса
+    </mat-label>
+    <textarea matInput cdkTextareaAutosize [cdkAutosizeMinRows]="5" [cdkAutosizeMaxRows]="15" #forPreview>
+    </textarea>
+  </mat-form-field>
+
+</div>

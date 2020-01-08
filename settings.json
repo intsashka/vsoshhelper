@@ -1,0 +1,27 @@
+{
+  "generateCoupons": {
+    "pathToTemplate": "/home/intsashka/intsashka/work/ВсОШ 2020/Шаблоны документов/Шалон талона.tex",
+    "pathToOutDir": "/home/intsashka/intsashka/work/ВсОШ 2020/Результаты генерации",
+    "filename": "Талоны тест"
+  },
+  "generateCiphers": {
+    "pathToTemplate": "/home/intsashka/intsashka/work/ВсОШ 2020/Шаблоны документов/Шаблон шифровки.tex",
+    "pathToOutDir": "/home/intsashka/intsashka/work/ВсОШ 2020/Результаты генерации",
+    "filename": "Шифровки"
+  },
+  "generateCertificates": {
+    "pathToTemplate": "/home/intsashka/intsashka/work/ВсОШ 2020/Шаблоны документов/Шаблон сертификата.tex",
+    "pathToOutDir": "/home/intsashka/intsashka/work/ВсОШ 2020/Результаты генерации",
+    "filename": "Сертификаты"
+  },
+  "generateDiplomas": {
+    "pathToTemplate": "/home/intsashka/intsashka/work/ВсОШ 2020/Шаблоны документов/Шаблон диплома.tex",
+    "pathToOutDir": "/home/intsashka/intsashka/work/ВсОШ 2020/Результаты генерации",
+    "filename": "Дипломы"
+  },
+  "main": {
+    "pathToDatabaseSchoolSubjects": "/home/intsashka/intsashka/work/ВсОШ 2020/Базы данных/База предметов.xlsx",
+    "pathToDatabaseSchools": "/home/intsashka/intsashka/work/ВсОШ 2020/Базы данных/База школ.xlsx",
+    "commandGeneratePDF": "pdflatex {{filename}} -output-directory={{dir_out}} -quiet"
+  }
+}

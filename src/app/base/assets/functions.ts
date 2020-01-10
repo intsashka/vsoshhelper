@@ -28,10 +28,16 @@ export function writeFilePromise(path: string, data: string): Promise<void> {
 }
 
 export async function readXLSX(path: string): Promise<WorkBook> {
-  const data = await readFilePromise(path);
-  return XLSX.read(data, {
-    cellDates: true,
-    type: "buffer",
+  return new Promise<WorkBook>((resolve, reject) => {
+    try {
+      resolve(
+        XLSX.readFile(path, {
+          cellDates: true,
+        })
+      );
+    } catch (error) {
+      reject(error);
+    }
   });
 }
 

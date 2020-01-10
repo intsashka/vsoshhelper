@@ -4,7 +4,6 @@ import { readFilePromise, writeFilePromise } from "./functions";
 
 export interface MainSettings {
   pathToDatabaseSchoolSubjects: string;
-  pathToDatabaseSchools: string;
   commandGeneratePDF: string;
 }
 

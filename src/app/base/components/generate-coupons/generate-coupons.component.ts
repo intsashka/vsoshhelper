@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { SchoolSubject } from "../../assets/school-subjects";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { SettingsService } from "../../services/settings.service";
 import { SchoolSubjectsService } from "../../services/school-subjects.service";
 import { MakerPdfService } from "../../services/maker-pdf.service";
@@ -11,6 +11,7 @@ import { UnsubscribeComponent } from "../../assets/unsubscribe-component";
 import * as moment from "moment";
 import { NotificationService } from "../../services/notification.service";
 import { LoggerService } from "@angular-ru/logger";
+import { nonNegativeIntegerValidator } from "../../../shared/validators/non-negative-integer.validator";
 
 const CouponsOnPage = 18;
 
@@ -101,9 +102,9 @@ export class GenerateCouponsComponent extends UnsubscribeComponent implements On
 
   private initForm(): void {
     this.form = this.formBuilder.group({
-      numberCouponsOrdered: [0, Validators.required],
-      numberReplacementCoupons: [0, Validators.required],
-      totalNumberReplacementCoupons: [{ value: 0, disabled: true }, Validators.required],
+      numberCouponsOrdered: [0, nonNegativeIntegerValidator],
+      numberReplacementCoupons: [0, nonNegativeIntegerValidator],
+      totalNumberReplacementCoupons: [{ value: 0, disabled: true }],
     });
 
     this.form.valueChanges.pipe(takeUntil(this.destroyed)).subscribe(value => {

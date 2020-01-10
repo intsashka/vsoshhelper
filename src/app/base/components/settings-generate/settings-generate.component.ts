@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms"
 import { SettingsGenerate } from "../../assets/settings";
 import { UnsubscribeComponent } from "../../assets/unsubscribe-component";
 import { takeUntil } from "rxjs/operators";
-import * as path from "path";
+import { notEmptyStringValidator } from "../../../shared/validators/not-empty-string.validator";
 
 @Component({
   selector: "app-settings-generate",
@@ -28,14 +28,6 @@ export class SettingsGenerateComponent extends UnsubscribeComponent {
 
   @Output() changeSettings = new EventEmitter<SettingsGenerate>();
 
-  get pathToTemplateControl(): FormControl {
-    return this.form.get("pathToTemplate") as FormControl;
-  }
-
-  get pathToOutDirControl(): FormControl {
-    return this.form.get("pathToOutDir") as FormControl;
-  }
-
   get filenameControl(): FormControl {
     return this.form.get("filename") as FormControl;
   }
@@ -49,25 +41,11 @@ export class SettingsGenerateComponent extends UnsubscribeComponent {
     this.form = this.formBuilder.group({
       pathToTemplate: ["", Validators.required],
       pathToOutDir: ["", Validators.required],
-      filename: ["", Validators.required],
+      filename: ["", notEmptyStringValidator],
     });
 
     this.form.valueChanges.pipe(takeUntil(this.destroyed)).subscribe(value => {
       this.changeSettings.emit(this.form.valid ? value : null);
     });
-  }
-
-  selectTemplate(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files.length > 0) {
-      this.pathToTemplateControl.setValue(input.files[0].path);
-    }
-  }
-
-  selectDir(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files.length > 0) {
-      this.pathToOutDirControl.setValue(path.dirname(input.files[0].path));
-    }
   }
 }

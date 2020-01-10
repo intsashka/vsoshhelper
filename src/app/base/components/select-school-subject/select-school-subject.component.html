@@ -6,6 +6,6 @@
     <mat-option *ngFor="let subject of schoolSubjects" [value]="subject">{{ subject.title }}</mat-option>
   </mat-select>
   <mat-error *ngIf="selectedSchoolSubjectControl.errors">
-    Предмет должен быть задан
+    Задайте предмет
   </mat-error>
 </mat-form-field>

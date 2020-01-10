@@ -1,44 +1,24 @@
 import * as XLSX from "xlsx";
 import { WorkSheet } from "xlsx";
 
-
-export enum TypeDiploma {
-  Winner = "победитель",
-  Prizewinner = "призёр",
-}
-
-function convertTypeDiploma(value: string | undefined): TypeDiploma | undefined {
-  switch (value) {
-    case "победитель":
-      return TypeDiploma.Winner;
-    case "призёр":
-      return TypeDiploma.Prizewinner;
-    default:
-      return undefined;
-  }
-}
-
-export interface StudentFromProtocol {
-  fio: string;
-  classNumber: number;
-  school: string;
-  schoolFull: string;
-  municipality: string;
-
-  diploma: TypeDiploma;
-}
-
 const MAX_ROW = 2000;
 const MAX_COL = 2000;
 
-const TARGET_HEADERS = ["№", "ФИО", "Муниципалитет", "Учебное заведение", "Учебное заведение (полностью)", "Класс", "Тип диплома"];
+const TARGET_HEADERS = ["ФИО", "Муниципалитет", "Учебное заведение", "Класс"];
 
-export function readStudentFromProtocol(path: string): Array<[string, StudentFromProtocol[]]> {
+export interface StudentFromTotalList {
+  fio: string;
+  classNumber: number;
+  school: string;
+  municipality: string;
+}
+
+export function readStudentFromTotalList(path: string): Array<[string, StudentFromTotalList[]]> {
   const workbook = XLSX.readFile(path);
   return workbook.SheetNames.map(sheetName => [sheetName, parseSheet(workbook.Sheets[sheetName])]).filter(item => item[1].length !== 0) as any;
 }
 
-function parseSheet(sheet: WorkSheet): StudentFromProtocol[] {
+function parseSheet(sheet: WorkSheet): StudentFromTotalList[] {
   const headerRow = findTargetRow(sheet);
   if (headerRow === null) {
     return [];
@@ -50,20 +30,21 @@ function parseSheet(sheet: WorkSheet): StudentFromProtocol[] {
   const data = XLSX.utils.sheet_to_json(sheet, { range: `${start}:${end}` });
   return data
     .map(item => {
-      if (typeof item["№"] !== "number") {
-        return null;
-      }
-
-      const student: StudentFromProtocol = {
+      const student: StudentFromTotalList = {
         fio: item["ФИО"],
         classNumber: item["Класс"],
         municipality: item["Муниципалитет"],
         school: item["Учебное заведение"],
-        schoolFull: item["Учебное заведение (полностью)"],
-        diploma: convertTypeDiploma(item["Тип диплома"])
       };
 
-      if (Object.keys(student).some(key => student[key] === undefined)) {
+      const keysAndTypes: Array<[keyof StudentFromTotalList, "string" | "number"]> = [
+        ["fio", "string"],
+        ["classNumber", "number"],
+        ["municipality", "string"],
+        ["school", "string"],
+      ];
+
+      if (keysAndTypes.some(([key, type]) => typeof student[key] !== type)) {
         return null;
       }
 

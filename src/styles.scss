@@ -1,7 +1,21 @@
 @import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
 
   height: 100%;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100%;
+
+  > * {
+    width: 80%;
+    margin-top: 0.5rem !important;
+  }
 }

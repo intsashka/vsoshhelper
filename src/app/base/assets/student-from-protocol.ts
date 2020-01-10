@@ -1,24 +1,32 @@
 import * as XLSX from "xlsx";
 import { WorkSheet } from "xlsx";
 
-const MAX_ROW = 2000;
-const MAX_COL = 2000;
+export enum TypeDiploma {
+  Winner = "победитель",
+  Prizewinner = "призёр",
+}
 
-const TARGET_HEADERS = ["ФИО", "Муниципалитет", "Учебное заведение", "Класс"];
-
-export interface StudentFromTotalList {
+export interface StudentFromProtocol {
   fio: string;
   classNumber: number;
   school: string;
+  schoolFull: string;
   municipality: string;
+
+  diploma: TypeDiploma;
 }
 
-export function readStudentFromTotalList(path: string): Array<[string, StudentFromTotalList[]]> {
+const MAX_ROW = 2000;
+const MAX_COL = 2000;
+
+const TARGET_HEADERS = ["№", "ФИО", "Муниципалитет", "Учебное заведение", "Учебное заведение (полностью)", "Класс", "Тип диплома"];
+
+export function readStudentFromProtocol(path: string): Array<[string, StudentFromProtocol[]]> {
   const workbook = XLSX.readFile(path);
   return workbook.SheetNames.map(sheetName => [sheetName, parseSheet(workbook.Sheets[sheetName])]).filter(item => item[1].length !== 0) as any;
 }
 
-function parseSheet(sheet: WorkSheet): StudentFromTotalList[] {
+function parseSheet(sheet: WorkSheet): StudentFromProtocol[] {
   const headerRow = findTargetRow(sheet);
   if (headerRow === null) {
     return [];
@@ -30,14 +38,33 @@ function parseSheet(sheet: WorkSheet): StudentFromTotalList[] {
   const data = XLSX.utils.sheet_to_json(sheet, { range: `${start}:${end}` });
   return data
     .map(item => {
-      const student: StudentFromTotalList = {
+      if (typeof item["№"] !== "number") {
+        return null;
+      }
+
+      const student: StudentFromProtocol = {
         fio: item["ФИО"],
         classNumber: item["Класс"],
         municipality: item["Муниципалитет"],
         school: item["Учебное заведение"],
+        schoolFull: item["Учебное заведение (полностью)"],
+        diploma: item["Тип диплома"],
       };
 
-      if (Object.keys(student).some(key => student[key] === undefined)) {
+      const keysAndTypes: Array<[keyof StudentFromProtocol, "string" | "number"]> = [
+        ["fio", "string"],
+        ["classNumber", "number"],
+        ["municipality", "string"],
+        ["school", "string"],
+        ["schoolFull", "string"],
+        ["diploma", "string"],
+      ];
+
+      if (keysAndTypes.some(([key, type]) => typeof student[key] !== type)) {
+        return null;
+      }
+
+      if (![TypeDiploma.Winner, TypeDiploma.Prizewinner].includes(student.diploma)) {
         return null;
       }
 

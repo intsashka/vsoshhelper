@@ -1,35 +1,18 @@
-<div class="d-flex flex-column align-items-center w-100 mt-2" [formGroup]="form">
-  <mat-form-field>
-    <mat-label>
-      Путь к базе предметов
-    </mat-label>
-    <input matInput type="text" formControlName="pathToDatabaseSchoolSubjects" />
-    <input type="file" class="d-none" #inputFileForSchoolSubjects (input)="selectFile($event, 'pathToDatabaseSchoolSubjects')" />
-    <button mat-icon-button matSuffix (click)="inputFileForSchoolSubjects.click()">
-      <mat-icon svgIcon="insert_drive_file"></mat-icon>
-    </button>
-  </mat-form-field>
-
-  <mat-form-field>
-    <mat-label>
-      Путь к базе школ
-    </mat-label>
-    <input matInput type="text" formControlName="pathToDatabaseSchools" />
-    <input type="file" class="d-none" #inputFileForSchools (input)="selectFile($event, 'pathToDatabaseSchools')" />
-    <button mat-icon-button matSuffix (click)="inputFileForSchools.click()">
-      <mat-icon svgIcon="insert_drive_file"></mat-icon>
-    </button>
-  </mat-form-field>
+<div class="main-container" [formGroup]="form">
+  <app-select-file title="Путь к базе предметов" formControlName="pathToDatabaseSchoolSubjects"></app-select-file>
 
   <mat-form-field>
     <mat-label>
       Команда для генерации pdf
     </mat-label>
     <input matInput type="text" formControlName="commandGeneratePDF" />
+    <mat-error *ngIf="form.get('commandGeneratePDF').errors">
+      Задайте команду для генерации
+    </mat-error>
   </mat-form-field>
 </div>
 
 <div class="d-flex justify-content-center mt-3">
   <button mat-raised-button (click)="cancel()">Отмена</button>
-  <button class="ml-2" mat-raised-button color="primary" (click)="save()">Сохранить</button>
+  <button class="ml-2" mat-raised-button color="primary" (click)="save()" [disabled]="form.invalid">Сохранить</button>
 </div>

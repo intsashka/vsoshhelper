@@ -10,6 +10,8 @@ import { SettingsGenerate } from "../../assets/settings";
 import { map, tap } from "rxjs/operators";
 import { LoggerService } from "@angular-ru/logger";
 import { NotificationService } from "../../services/notification.service";
+import { nonNegativeIntegerValidator } from "../../../shared/validators/non-negative-integer.validator";
+import { generateCiphers } from "../../assets/template-values-generate";
 
 @Component({
   selector: "app-generate-ciphers",
@@ -30,7 +32,19 @@ export class GenerateCiphersComponent implements OnInit {
   }
 
   get formattedDataEvent(): string {
-    return this.schoolSubject ? moment(this.schoolSubject.dateEvent).format("D MMMM YYYY года").toLowerCase() : "";
+    return this.schoolSubject
+      ? moment(this.schoolSubject.dateEvent)
+          .format("D MMMM YYYY года")
+          .toLowerCase()
+      : "";
+  }
+
+  get numberCiphersForClass(): { [7]?: number; [8]?: number; [9]?: number; [10]?: number; [11]?: number } {
+    const result = {};
+    Object.keys(this.form.value).forEach(classNumber => {
+      result[classNumber] = Number.parseInt(this.form.value[classNumber], 10);
+    });
+    return result;
   }
 
   constructor(
@@ -66,35 +80,7 @@ export class GenerateCiphersComponent implements OnInit {
     settings.generateCiphers = this.settingsGenerate;
     this.settingsService.saveSettings(settings);
 
-    const numberCiphers = new Map<string, number>();
-    Object.keys(this.schoolSubject.cipher).forEach(classNumber => {
-      const cipher = this.schoolSubject.cipher[classNumber];
-      const number = numberCiphers.get(cipher) || 0;
-      const numberCipher = Number.parseInt(this.form.get(classNumber).value, 10);
-      if (Number.isInteger(numberCipher)) {
-        numberCiphers.set(cipher, number + numberCipher);
-      }
-    });
-
-    let data: string[] = [];
-    numberCiphers.forEach((numberCipher, cipher) => {
-      const numbers = this.getRange(numberCipher, [13]);
-      data = data.concat(numbers.map(item => `${cipher}-${this.numberToString(item)}`));
-    });
-    if (data.length % 2 !== 0) {
-      data.push("Я лишняя!!!");
-    }
-
-    const title = this.schoolSubject.names.dative.toLowerCase();
-    const date = this.formattedDataEvent;
-    const place = this.schoolSubject.placeEvent;
-
-    let templatePages: string[] = [];
-    for (let i = 0; i < data.length; i += 2) {
-      templatePages.push(`\\TwoEncryption{${title}}{${date}}{${place}}{${data[i]}}{${data[i + 1]}}`);
-    }
-    const templateDocument = templatePages.join("\n");
-
+    const templateDocument = generateCiphers(this.schoolSubject, this.numberCiphersForClass);
     const templateValues = new Map([["%%{{template_document}}", templateDocument]]);
 
     this.makerPdfService
@@ -110,30 +96,16 @@ export class GenerateCiphersComponent implements OnInit {
   }
 
   canGenerate(): boolean {
-    return !!this.schoolSubject && !!this.settingsGenerate;
+    return this.form.valid && !!this.schoolSubject && !!this.settingsGenerate;
   }
 
   private initForm(): void {
     this.form = this.formBuilder.group({
-      "7": "",
-      "8": "",
-      "9": "",
-      "10": "",
-      "11": "",
+      "7": [0, nonNegativeIntegerValidator],
+      "8": [0, nonNegativeIntegerValidator],
+      "9": [0, nonNegativeIntegerValidator],
+      "10": [0, nonNegativeIntegerValidator],
+      "11": [0, nonNegativeIntegerValidator],
     });
-  }
-
-  private getRange(count: number, exclude: number[]): number[] {
-    const range: number[] = [];
-    for (let i = 1; range.length !== count; ++i) {
-      if (!exclude.includes(i)) {
-        range.push(i);
-      }
-    }
-    return range;
-  }
-
-  private numberToString(number: number): string {
-    return `${Math.floor(number / 10)}${Math.floor(number % 10)}`;
   }
 }

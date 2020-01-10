@@ -1,0 +1,13 @@
+<mat-form-field class="w-100">
+  <mat-label>
+    {{ title }}
+  </mat-label>
+  <input matInput type="text" [formControl]="control" [disabled]="disabled" />
+  <input type="file" class="d-none" #inputFile (input)="selectFile($event)" />
+  <button mat-icon-button matSuffix (click)="inputFile.click()" [disabled]="disabled">
+    <mat-icon svgIcon="insert_drive_file"></mat-icon>
+  </button>
+  <mat-error *ngIf="control.errors?.file">
+    {{ control.errors.file.message }}
+  </mat-error>
+</mat-form-field>

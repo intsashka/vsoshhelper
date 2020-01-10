@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NotificationService } from "../../services/notification.service";
 import { SettingsService } from "../../services/settings.service";
 import { UnsubscribeComponent } from "../../assets/unsubscribe-component";
@@ -17,13 +17,6 @@ export class MainSettingsComponent extends UnsubscribeComponent {
   constructor(private notificationService: NotificationService, private settingsService: SettingsService, private formBuilder: FormBuilder) {
     super();
     this.initForm();
-  }
-
-  selectFile(event: Event, controlName: "pathToDatabaseSchoolSubjects" | "pathToDatabaseSchools"): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files.length > 0) {
-      this.form.get(controlName).setValue(input.files[0].path);
-    }
   }
 
   cancel(): void {
@@ -44,9 +37,8 @@ export class MainSettingsComponent extends UnsubscribeComponent {
 
   private initForm(): void {
     this.form = this.formBuilder.group({
-      pathToDatabaseSchoolSubjects: "",
-      pathToDatabaseSchools: "",
-      commandGeneratePDF: "",
+      pathToDatabaseSchoolSubjects: ["", Validators.required],
+      commandGeneratePDF: ["", Validators.required],
     });
 
     this.settingsService.settings$.pipe(takeUntil(this.destroyed)).subscribe(settings => {

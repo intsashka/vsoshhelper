@@ -6,7 +6,7 @@ import { SharedModule } from "../shared/shared.module";
 import { Page } from "./assets/page";
 import { ReactiveFormsModule } from "@angular/forms";
 import { GenerateCouponsComponent } from "./components/generate-coupons/generate-coupons.component";
-import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from "@angular/material";
+import { ErrorStateMatcher } from "@angular/material";
 import { MainSettingsComponent } from "./components/main-settings/main-settings.component";
 import { SelectSchoolSubjectComponent } from "./components/select-school-subject/select-school-subject.component";
 import { SettingsGenerateComponent } from "./components/settings-generate/settings-generate.component";
@@ -14,6 +14,7 @@ import { GenerateCiphersComponent } from "./components/generate-ciphers/generate
 import { GenerateCertificatesComponent } from "./components/generate-certificates/generate-certificates.component";
 import * as moment from "moment";
 import { GenerateDiplomasComponent } from "./components/generate-diplomas/generate-diplomas.component";
+import { ShowAllErrorStateMatcher } from "./assets/show-all-error-state-matcher";
 
 const routes: Routes = [
   {
@@ -59,7 +60,7 @@ const routes: Routes = [
   providers: [
     {
       provide: ErrorStateMatcher,
-      useClass: ShowOnDirtyErrorStateMatcher,
+      useClass: ShowAllErrorStateMatcher,
     },
   ],
   entryComponents: [MainSettingsComponent, IndexComponent],

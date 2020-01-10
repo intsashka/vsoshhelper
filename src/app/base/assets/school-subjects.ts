@@ -1,4 +1,3 @@
-import { readSettings } from "./settings";
 import { flatArray, readXLSX } from "./functions";
 import * as XLSX from "xlsx";
 
@@ -20,9 +19,8 @@ export interface SchoolSubject {
   };
 }
 
-export async function readSchoolSubjects(): Promise<SchoolSubject[]> {
-  const settings = await readSettings();
-  const workBook = await readXLSX(settings.main.pathToDatabaseSchoolSubjects);
+export async function readSchoolSubjects(path: string): Promise<SchoolSubject[]> {
+  const workBook = await readXLSX(path);
   const sheets = workBook.SheetNames.map(name => workBook.Sheets[name]);
   const rawSchoolSubjects = flatArray(sheets.map(sheet => XLSX.utils.sheet_to_json(sheet)));
   return rawSchoolSubjects.map(item => parseRawSchoolSubject(item)).filter(item => !!item);
@@ -58,11 +56,14 @@ function parseRawSchoolSubject(data: any): SchoolSubject | undefined {
 
   if (typeof schoolSubject.dateEvent !== "object") {
     return undefined;
+  } else {
+    schoolSubject.dateEvent.setHours(schoolSubject.dateEvent.getHours() + 1);
   }
 
   const dateAward = data["Дата награждения"];
   if (typeof dateAward === "object") {
     schoolSubject.dateAward = dateAward;
+    schoolSubject.dateAward.setHours(schoolSubject.dateAward.getHours() + 1);
   }
 
   [

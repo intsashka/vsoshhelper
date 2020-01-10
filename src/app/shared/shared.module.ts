@@ -5,9 +5,10 @@ import { TranslateModule } from "@ngx-translate/core";
 
 import { PageNotFoundComponent } from "./components/";
 import { WebviewDirective } from "./directives/";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
-  MatButtonModule, MatCheckboxModule,
+  MatButtonModule,
+  MatCheckboxModule,
   MatFormFieldModule,
   MatIconModule,
   MatIconRegistry,
@@ -15,15 +16,18 @@ import {
   MatListModule,
   MatSelectModule,
   MatSidenavModule,
-  MatSnackBarModule, MatTreeModule,
+  MatSnackBarModule,
+  MatTreeModule,
 } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
 
 import * as fs from "fs";
 import * as path from "path";
+import { SelectFileComponent } from "./components/select-file/select-file.component";
+import { SelectDirComponent } from "./components/select-dir/select-dir.component";
 
 @NgModule({
-  declarations: [PageNotFoundComponent, WebviewDirective],
+  declarations: [PageNotFoundComponent, WebviewDirective, SelectFileComponent, SelectDirComponent],
   imports: [
     CommonModule,
     TranslateModule,
@@ -37,7 +41,8 @@ import * as path from "path";
     MatSnackBarModule,
     MatSelectModule,
     MatTreeModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    ReactiveFormsModule,
   ],
   exports: [
     TranslateModule,
@@ -52,7 +57,10 @@ import * as path from "path";
     MatSnackBarModule,
     MatSelectModule,
     MatTreeModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    ReactiveFormsModule,
+    SelectFileComponent,
+    SelectDirComponent,
   ],
 })
 export class SharedModule {

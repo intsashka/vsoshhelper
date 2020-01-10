@@ -8,6 +8,9 @@
       Количество заказанных талонов
     </mat-label>
     <input matInput type="text" formControlName="numberCouponsOrdered" />
+    <mat-error *ngIf="numberCouponsOrderedControl.errors?.nonNegativeInteger">
+      {{ numberCouponsOrderedControl.errors.nonNegativeInteger.message }}
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field>
@@ -15,6 +18,9 @@
       Количество запасных талонов
     </mat-label>
     <input matInput type="text" formControlName="numberReplacementCoupons" />
+    <mat-error *ngIf="numberReplacementCouponsControl.errors?.nonNegativeInteger">
+      {{ numberReplacementCouponsControl.errors.nonNegativeInteger.message }}
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field>

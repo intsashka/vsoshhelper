@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormBuilder, FormControl } from "@angular/forms";
+import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { SchoolSubject } from "../../assets/school-subjects";
 import { UnsubscribeComponent } from "../../assets/unsubscribe-component";
 import { takeUntil } from "rxjs/operators";
@@ -30,7 +30,7 @@ export class SelectSchoolSubjectComponent extends UnsubscribeComponent {
   }
 
   private initControl(): void {
-    this.selectedSchoolSubjectControl = this.formBuilder.control(null);
+    this.selectedSchoolSubjectControl = this.formBuilder.control(null, Validators.required);
     this.selectedSchoolSubjectControl.valueChanges.pipe(takeUntil(this.destroyed)).subscribe(value => {
       this.selectSchoolSubject.emit(value);
     });
